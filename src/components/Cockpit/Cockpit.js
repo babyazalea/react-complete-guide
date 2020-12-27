@@ -1,16 +1,20 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 
 import classes from "./Cockpit.css";
+import AuthContext from "../../context/auth-context";
 
 const cockpit = (props) => {
+  const toggleBtnRef = useRef(null);
+
   useEffect(() => {
     console.log("[Cockpit.js] useEffect");
-    const timer = setTimeout(() => {
-      alert("Saved data to cloud");
-    }, 1000);
+    // const timer = setTimeout(() => {
+    //   alert("Saved data to cloud");
+    // }, 1000);
     // below return thing is triggered when component render & mount
+    toggleBtnRef.current.click();
     return () => {
-      clearTimeout(timer);
+      // clearTimeout(timer);
       console.log("[Cockpit.js] cleanup work in useEffect");
     };
   }, []);
@@ -42,13 +46,12 @@ const cockpit = (props) => {
     <div className={classes.Cockpit}>
       <h1>{props.title}</h1>
       <p className={assignedClasses.join(" ")}>This is really working!</p>
-      {/*
-      below onClick way can be ineffeciant, because react-rerender problem.
-      So, we can use .bind way where below than this way.
-      */}
-      <button className={btnClass} onClick={props.clicked}>
+      <button ref={toggleBtnRef} className={btnClass} onClick={props.clicked}>
         Toggle Persons
       </button>
+      <AuthContext.Consumer>
+        {(context) => <button onClick={context.login}>Log in</button>}
+      </AuthContext.Consumer>
     </div>
   );
 };
